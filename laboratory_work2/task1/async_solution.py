@@ -1,11 +1,12 @@
 import asyncio
 import time
+import os
 
 async def calculate_sum(start, end):
     return sum(range(start, end))
 
 async def main():
-    target = 1000000000
+    target = int(os.getenv("TARGET", "1000000000"))
     num_tasks = 4
     chunk_size = target // num_tasks
     tasks = []

@@ -1,11 +1,13 @@
 import threading
 import time
+import os
 
 
 def calculate_sum(start, end, result, index):
     result[index] = sum(range(start, end))
 
-target = 1000000000
+
+target = int(os.getenv("TARGET", "1000000000"))
 num_threads = 4
 chunk_size = target // num_threads
 threads = []

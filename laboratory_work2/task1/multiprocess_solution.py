@@ -1,12 +1,13 @@
 import multiprocessing
 import time
+import os
 
 def calculate_sum(start_end):
     start, end = start_end
     return sum(range(start, end))
 
 def main():
-    target = 1000000000
+    target = int(os.getenv("TARGET", "1000000000"))
     num_processes = 4
     chunk_size = target // num_processes
     ranges = [(i * chunk_size + 1, (i + 1) * chunk_size + 1) for i in range(num_processes)]

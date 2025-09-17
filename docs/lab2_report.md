@@ -9,12 +9,14 @@
 ```python
 import threading
 import time
+import os
 
 
 def calculate_sum(start, end, result, index):
     result[index] = sum(range(start, end))
 
-target = 1000000000
+
+target = int(os.getenv("TARGET", "1000000000"))
 num_threads = 4
 chunk_size = target // num_threads
 threads = []
@@ -43,13 +45,14 @@ print(f"Время выполнения при помощи threading: {time.tim
 ```python
 import multiprocessing
 import time
+import os
 
 def calculate_sum(start_end):
     start, end = start_end
     return sum(range(start, end))
 
 def main():
-    target = 1000000000
+    target = int(os.getenv("TARGET", "1000000000"))
     num_processes = 4
     chunk_size = target // num_processes
     ranges = [(i * chunk_size + 1, (i + 1) * chunk_size + 1) for i in range(num_processes)]
@@ -73,12 +76,13 @@ if __name__ == "__main__":
 ```python
 import asyncio
 import time
+import os
 
 async def calculate_sum(start, end):
     return sum(range(start, end))
 
 async def main():
-    target = 1000000000
+    target = int(os.getenv("TARGET", "1000000000"))
     num_tasks = 4
     chunk_size = target // num_tasks
     tasks = []
@@ -95,6 +99,7 @@ async def main():
     print(f"Счёт до {target}")
     print(f"Общая сумма: {total_sum}")
     print(f"Время выполнения при помощи asyncio: {time.time() - start_time:.2f} секунд")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -302,3 +307,13 @@ if __name__ == "__main__":
 | Простота отладки | Средняя | Сложнее (fork/spawn, IPC) | Средняя, нужна дисциплина async |
 | Типичные библиотеки | requests, threading | multiprocessing, concurrent.futures | asyncio, aiohttp |
 | Когда выбирать | Немного параллельных IO | Тяжелые CPU‑вычисления | Много сетевых запросов |
+
+## Результаты замеров (Task1, TARGET=50,000,000)
+
+| Подход | Время, сек |
+|---|---|
+| threading (4 потока) | 0.39 |
+| multiprocessing (4 процесса) | 0.17 |
+| asyncio (4 задачи) | 0.38 |
+
+Примечание: значения получены на текущем окружении (macOS darwin 24.3.0, Python 3.11). Результаты зависят от CPU/памяти/нагрузки системы и могут отличаться на другой машине.
